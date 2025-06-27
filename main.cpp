@@ -7,7 +7,30 @@
 #include <iostream>
 #include <string>
 
-
+class preview : public Fl_Button
+{
+	Fl_Box* inf;
+public:
+	preview(int x, int y, int w, int h, const char* l, Fl_Box* i) : Fl_Button(x, y, w, h, l), inf(i)  {}
+	int handle(int event) override
+	{
+		if (event == FL_ENTER)
+		{
+			inf->show();
+			label("Наведено!");
+			redraw();
+			return 1;
+		}
+		else if (event == FL_LEAVE)
+		{
+			inf->hide();
+			label("Наведите!");
+			redraw();
+			return 1;
+		}
+		return Fl_Button::handle(event);
+	}
+};
 
 using namespace std;
 
@@ -43,7 +66,8 @@ int main(int argc, char** argv)
 	Fl_Button b3(220, 10, 100, 50, "Меню 3");
 	Fl_Button con(690, 540, 100, 50, "Консоль");
 
-	b1.tooltip("Привет");
+
+	//b1.tooltip("Привет");
 	//events
 	b1.callback(m1f, bmenu->parent());//m1
 	b2.callback(m1f, bmenu->parent());//m2
@@ -55,12 +79,17 @@ int main(int argc, char** argv)
 	bmenu->end();
 
 	//меню 1
-	Fl_Group* menu1 = new Fl_Group(5, 5, 790, 200);
+	Fl_Group* menu1 = new Fl_Group(5, 5, 790, 590);
 	win.add(menu1);
 	menu1->hide();
-	menu1->box(FL_DOWN_BOX);
 
 	Fl_Box text(10, 10, 200, 150, "text for menu 1");
+	text.box(FL_DOWN_BOX);
+
+	Fl_Box inf(120, 200, 650, 200);
+	preview btn(10, 200, 100, 50, "Наведите!", &inf);
+	inf.box(FL_PLASTIC_UP_BOX);
+	inf.hide();
 	
 	menu1->end();
 
